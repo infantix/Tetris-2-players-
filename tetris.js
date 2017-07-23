@@ -4,9 +4,9 @@ const context = canvas.getContext('2d');
 context.scale(20,20);
 
 const matrix = [
-	[0, 0, 0],
-	[1, 1, 1],
-	[0, 1, 0]
+	[1, 0, 0],
+	[1, 0, 0],
+	[1, 1, 0]
 ];
 
 const arena = createMatrix(20, 12);
@@ -24,6 +24,23 @@ function createMatrix(height, width) {
 	}
 
 	return matrix;
+}
+
+function rotate(matrix) {
+
+  // swap the symmetric elements
+	for (let i = 0; i < matrix.length; i++) {
+		for (let j = 0; j < i; j++) {
+			let temp = matrix[i][j];
+			matrix[i][j] = matrix[j][i];
+			matrix[j][i] = temp;
+		}
+	}
+
+	// reverse the individual rows
+	matrix = matrix.map(function(row) {
+		return row.reverse();
+	});
 }
 
 function collide(player, arena) {
@@ -106,6 +123,12 @@ document.addEventListener('keydown', event => {
 
 	switch(event.keyCode) {
 
+
+		//Up
+		case 38:
+			playerRotate();
+			break;
+
 		//LEFT
 		case 37:
 			playerMoveLeft();
@@ -122,6 +145,10 @@ document.addEventListener('keydown', event => {
 			break;
 	}
 });
+
+function playerRotate() {
+	rotate(player.matrix);
+}
 
 function playerDrop() {
 	

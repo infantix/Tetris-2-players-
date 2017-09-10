@@ -1,19 +1,100 @@
 const canvas = document.getElementById('tetris');
 const context = canvas.getContext('2d');
+const numPieces = 7;
 
 context.scale(20,20);
-
-const matrix = [
-	[0, 0, 0],
-	[1, 1, 1],
-	[0, 1, 0]
-];
 
 const arena = createMatrix(20, 12);
 
 const player = {
 	position: {x: 0, y: 0},
-	matrix: matrix
+	matrix: createPiece()
+}
+
+function createSquare() {
+	return [
+		[1, 1],
+		[1, 1]
+	];
+}
+
+function createLong() {
+	return [
+		[0, 1, 0, 0],
+		[0, 1, 0, 0],
+		[0, 1, 0, 0],
+		[0, 1, 0, 0]
+	];
+}
+
+function createZigR() {
+	return [
+		[1, 1, 0],
+		[0, 1, 1],
+		[0, 0, 0]
+	];
+}
+
+function createZigL() {
+	return [
+		[0, 1, 1],
+		[1, 1, 0],
+		[0, 0, 0]
+	];
+}
+
+function createTri() {
+	return [
+		[0, 1, 0],
+		[1, 1, 1],
+		[0, 0, 0]
+	];
+}
+
+function createLL() {
+	return [
+		[0, 1, 0],
+		[0, 1, 0],
+		[1, 1, 0]
+	];
+}
+
+function createLR() {
+	return [
+		[0, 1, 0],
+		[0, 1, 0],
+		[0, 1, 1]
+	];
+}
+
+function createPiece() {
+
+var pieceNum = Math.floor((Math.random() * numPieces) + 1);
+
+switch (pieceNum) {
+
+	case 1:
+		return createSquare();
+
+	case 2:
+		return createLong();
+
+	case 3:
+		return createZigR();
+
+	case 4:
+		return createZigL();
+
+	case 5:
+		return createTri();
+
+	case 6:
+		return createLL();
+
+	case 7:
+		return createLR();
+	}
+
 }
 
 function createMatrix(height, width) {
@@ -178,11 +259,19 @@ function playerDrop() {
 	if(collide(player, arena)) {
 		player.position.y --;
 		merge(arena,player);
-		player.position.y = 0;
+		playerReset();
 	}
 
 	dropCounter = 0;
 }
+
+function playerReset() {
+	player.matrix = createPiece();
+	player.position.y = 0;
+	//FIXME: start always from the top-left corner. why?
+	player.position.x = (arena[0].lenght /2 | 0);
+}
+
 
 function playerMoveLeft() {
 	player.position.x--;

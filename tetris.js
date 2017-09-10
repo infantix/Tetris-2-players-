@@ -268,8 +268,7 @@ function playerDrop() {
 function playerReset() {
 	player.matrix = createPiece();
 	player.position.y = 0;
-	//FIXME: start always from the top-left corner. why?
-	player.position.x = (arena[0].lenght /2 | 0);
+	player.position.x = (arena[0].length /2 | 0) - (player.matrix.length /2 | 0);
 }
 
 

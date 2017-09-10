@@ -1,6 +1,5 @@
 const canvas = document.getElementById('tetris');
 const context = canvas.getContext('2d');
-const numPieces = 7;
 
 context.scale(20,20);
 
@@ -69,30 +68,32 @@ function createLR() {
 
 function createPiece() {
 
-var pieceNum = Math.floor((Math.random() * numPieces) + 1);
+	const numPieces = 7;
 
-switch (pieceNum) {
+	var pieceNum = Math.floor((Math.random() * numPieces) + 1);
 
-	case 1:
-		return createSquare();
+	switch (pieceNum) {
 
-	case 2:
-		return createLong();
+		case 1:
+			return createSquare();
 
-	case 3:
-		return createZigR();
+		case 2:
+			return createLong();
 
-	case 4:
-		return createZigL();
+		case 3:
+			return createZigR();
 
-	case 5:
-		return createTri();
+		case 4:
+			return createZigL();
 
-	case 6:
-		return createLL();
+		case 5:
+			return createTri();
 
-	case 7:
-		return createLR();
+		case 6:
+			return createLL();
+
+		case 7:
+			return createLR();
 	}
 
 }

@@ -10,6 +10,17 @@ const player = {
 	matrix: createPiece()
 }
 
+const colors = [
+	null,
+	'red',
+	'yellow',
+	'blue',
+	'green',
+	'pink',
+	'orange',
+	'purple',
+];
+
 function createSquare() {
 	return [
 		[1, 1],
@@ -19,50 +30,50 @@ function createSquare() {
 
 function createLong() {
 	return [
-		[0, 1, 0, 0],
-		[0, 1, 0, 0],
-		[0, 1, 0, 0],
-		[0, 1, 0, 0]
+		[0, 2, 0, 0],
+		[0, 2, 0, 0],
+		[0, 2, 0, 0],
+		[0, 2, 0, 0]
 	];
 }
 
 function createZigR() {
 	return [
-		[1, 1, 0],
-		[0, 1, 1],
+		[3, 3, 0],
+		[0, 3, 3],
 		[0, 0, 0]
 	];
 }
 
 function createZigL() {
 	return [
-		[0, 1, 1],
-		[1, 1, 0],
+		[0, 4, 4],
+		[4, 4, 0],
 		[0, 0, 0]
 	];
 }
 
 function createTri() {
 	return [
-		[0, 1, 0],
-		[1, 1, 1],
+		[0, 5, 0],
+		[5, 5, 5],
 		[0, 0, 0]
 	];
 }
 
 function createLL() {
 	return [
-		[0, 1, 0],
-		[0, 1, 0],
-		[1, 1, 0]
+		[0, 6, 0],
+		[0, 6, 0],
+		[6, 6, 0]
 	];
 }
 
 function createLR() {
 	return [
-		[0, 1, 0],
-		[0, 1, 0],
-		[0, 1, 1]
+		[0, 7, 0],
+		[0, 7, 0],
+		[0, 7, 7]
 	];
 }
 
@@ -194,7 +205,7 @@ function drawMatrix(matrix, offset) {
 	matrix.forEach((row, y) => {
 		row.forEach((value, x) => {
 			if (value) {
-				context.fillStyle = 'green';
+				context.fillStyle = colors[value];
 				context.fillRect(x + offset.x, y + offset.y, 1, 1);
 			}
 		});
@@ -273,8 +284,12 @@ function playerReset() {
 
 	
 	if (collide(player, arena)) { //game over
-		arena.forEach(row => row.fill(0));
+		resetArena();
 	}
+}
+
+function resetArena() {
+	arena.forEach(row => row.fill(0));
 }
 
 

@@ -271,21 +271,41 @@ function playerDrop() {
 	if (collide(player, arena)) {
 		player.position.y--;
 		merge(arena, player);
+		deleteFullRows();
 		playerReset();
+	
+		if (collide(player, arena)) { //game over
+			resetArena();
+		}
 	}
 
 	dropCounter = 0;
+}
+
+function deleteFullRows() {
+	arena.forEach((row, index) => {
+		if(isRowFull(row)) {
+			const row = arena.splice(index, 1)[0].fill(0); //remove the row from the arena and reset the value.
+			arena.unshift(row); //put the row on top of the arena.
+		}
+	});
+}
+
+function isRowFull(row) {
+	
+	for(let i=0; i<row.length ; i++) {
+		if(row[i] === 0) {
+			return false;
+		}
+	}
+
+	return true;
 }
 
 function playerReset() {
 	player.matrix = createPiece();
 	player.position.y = 0;
 	player.position.x = (arena[0].length / 2 | 0) - (player.matrix.length / 2 | 0);
-
-	
-	if (collide(player, arena)) { //game over
-		resetArena();
-	}
 }
 
 function resetArena() {

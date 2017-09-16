@@ -7,7 +7,8 @@ const arena = createMatrix(20, 12);
 
 const player = {
 	position: { x: 0, y: 0 },
-	matrix: createPiece()
+	matrix: createPiece(),
+	score: 0,
 }
 
 const colors = [
@@ -198,6 +199,7 @@ function update(time = 0) {
 
 	resetCanvas();
 	draw();
+	updateScore();
 	requestAnimationFrame(update);
 }
 
@@ -271,24 +273,34 @@ function playerDrop() {
 	if (collide(player, arena)) {
 		player.position.y--;
 		merge(arena, player);
-		deleteFullRows();
+		let deletedRows = deleteFullRows();
+		increaseScore(deletedRows);
 		playerReset();
 	
 		if (collide(player, arena)) { //game over
 			resetArena();
+			player.score = 0;
 		}
 	}
 
 	dropCounter = 0;
 }
 
+function increaseScore(num) {
+	player.score += num * 10;
+}
+
 function deleteFullRows() {
+	let rowCounter = 0;
 	arena.forEach((row, index) => {
 		if(isRowFull(row)) {
 			const row = arena.splice(index, 1)[0].fill(0); //remove the row from the arena and reset the value.
 			arena.unshift(row); //put the row on top of the arena.
+			rowCounter++;
 		}
 	});
+
+	return rowCounter;
 }
 
 function isRowFull(row) {
@@ -327,6 +339,10 @@ function playerMoveRight() {
 	if (collide(player, arena)) {
 		player.position.x--;
 	}
+}
+
+function updateScore() {
+	document.getElementById('score').innerText = player.score;
 }
 
 update();

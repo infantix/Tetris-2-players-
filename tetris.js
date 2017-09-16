@@ -270,6 +270,11 @@ function playerReset() {
 	player.matrix = createPiece();
 	player.position.y = 0;
 	player.position.x = (arena[0].length / 2 | 0) - (player.matrix.length / 2 | 0);
+
+	
+	if (collide(player, arena)) { //game over
+		arena.forEach(row => row.fill(0));
+	}
 }
 
 

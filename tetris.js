@@ -4,12 +4,26 @@ const context = canvas.getContext('2d');
 context.scale(20, 20);
 
 const arena = createMatrix(20, 12);
+const player = new Player();
 
-const player = {
-	position: { x: 0, y: 0 },
-	matrix: createPiece(),
-	score: 0,
+let lastTime = 0;
+let accumulator = 0;
+const step = 1/60;
+
+const mainLoop = (millis) => {
+	if(lastTime) {
+		accumulator += (millis - lastTime) / 1000;
+
+		while(accumulator > step) {
+			player.update(step);
+			accumulator -= step;
+		}
+	}
+	lastTime = millis;
+	requestAnimationFrame(mainLoop);
 }
+
+mainLoop();
 
 const colors = [
 	null,
@@ -120,33 +134,6 @@ function createMatrix(height, width) {
 	return matrix;
 }
 
-function traspose(matrix) {
-	// swap the symmetric elements
-	for (let i = 0; i < matrix.length; i++) {
-		for (let j = 0; j < i; j++) {
-			let temp = matrix[i][j];
-			matrix[i][j] = matrix[j][i];
-			matrix[j][i] = temp;
-		}
-	}
-}
-
-function reverseRows(matrix) {
-	matrix = matrix.map(function (row) {
-		return row.reverse();
-	});
-}
-
-function rotateClockWise(matrix) {
-	traspose(matrix);
-	reverseRows(matrix);
-}
-
-function rotateAntiClockWise(matrix) {
-	reverseRows(matrix);
-	traspose(matrix);
-}
-
 
 function collide(player, arena) {
 
@@ -180,29 +167,6 @@ function resetCanvas() {
 	context.fillRect(0, 0, canvas.width, canvas.height);
 }
 
-let lastTime = 0;
-let dropCounter = 0;
-let dropInterval = 1000;
-
-
-function update(time = 0) {
-
-	const deltaTime = time - lastTime;
-	lastTime = time;
-
-	dropCounter += deltaTime;
-
-	if (dropCounter >= dropInterval) {
-		playerDrop();
-	}
-
-
-	resetCanvas();
-	draw();
-	updateScore();
-	requestAnimationFrame(update);
-}
-
 function drawMatrix(matrix, offset) {
 	matrix.forEach((row, y) => {
 		row.forEach((value, x) => {
@@ -229,66 +193,29 @@ document.addEventListener('keydown', event => {
 
 	switch (event.keyCode) {
 
-
 		case 38: //up
 		case 83: //s
-			playerRotate(rotateClockWise, rotateAntiClockWise);
+			player.rotateClockWise();
 			break;
 
 		case 65: //a
-			playerRotate(rotateAntiClockWise, rotateClockWise);
+			player.rotateAntiClockWise();
 			break;
 
 		case 37: //left
-			playerMoveLeft();
+			player.moveLeft();
 			break;
 
 		case 39: //right
-			playerMoveRight();
+			player.moveRight();
 			break;
 
 		case 32: //space bar
 		case 40: //down
-			playerDrop();
+			player.drop();
 			break;
 	}
 });
-
-function playerRotate(rotate, rollback) {
-
-	let playerPosition = player.position.x;
-	rotate(player.matrix);
-
-	if (collide(player, arena)) {
-		player.position.x = playerPosition;
-		rollback(player.matrix);
-	}
-}
-
-
-function playerDrop() {
-
-	player.position.y++;
-
-	if (collide(player, arena)) {
-		player.position.y--;
-		merge(arena, player);
-		let deletedRows = deleteFullRows();
-		increaseScore(deletedRows);
-		playerReset();
-	
-		if (collide(player, arena)) { //game over
-			resetArena();
-			player.score = 0;
-		}
-	}
-
-	dropCounter = 0;
-}
-
-function increaseScore(num) {
-	player.score += num * 10;
-}
 
 function deleteFullRows() {
 	let rowCounter = 0;
@@ -314,35 +241,12 @@ function isRowFull(row) {
 	return true;
 }
 
-function playerReset() {
-	player.matrix = createPiece();
-	player.position.y = 0;
-	player.position.x = (arena[0].length / 2 | 0) - (player.matrix.length / 2 | 0);
-}
-
 function resetArena() {
 	arena.forEach(row => row.fill(0));
 }
 
 
-function playerMoveLeft() {
-	player.position.x--;
-
-	if (collide(player, arena)) {
-		player.position.x++;
-	}
-}
-
-function playerMoveRight() {
-	player.position.x++;
-
-	if (collide(player, arena)) {
-		player.position.x--;
-	}
-}
-
 function updateScore() {
 	document.getElementById('score').innerText = player.score;
 }
 
-update();

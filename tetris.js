@@ -3,7 +3,7 @@ const context = canvas.getContext('2d');
 
 context.scale(20, 20);
 
-const arena = createMatrix(20, 12);
+const arena = new Arena(20, 12);
 const player = new Player();
 
 let lastTime = 0;
@@ -124,41 +124,8 @@ function createPiece() {
 
 }
 
-function createMatrix(height, width) {
-
-	const matrix = [];
-	while (height--) {
-		matrix.push(new Array(width).fill(0));
-	}
-
-	return matrix;
-}
-
-
-function collide(player, arena) {
-
-	for (let y = 0; y < player.matrix.length; y++) {
-
-		let row = player.matrix[y];
-
-		for (let x = 0; x < row.length; x++) {
-			if (player.matrix[y][x] !== 0) {
-				if (!arena[y + player.position.y] || //the row in the arena does not exist.
-					(arena[y + player.position.y][x + player.position.x]) !== 0) { //exist but is occupied.
-
-					return true;
-				}
-			}
-		}
-
-	}
-
-	return false;
-}
-
-
 function draw() {
-	drawMatrix(arena, { x: 0, y: 0 })
+	drawMatrix(arena.matrix, { x: 0, y: 0 })
 	drawMatrix(player.matrix, player.position);
 }
 
@@ -177,17 +144,6 @@ function drawMatrix(matrix, offset) {
 		});
 	});
 }
-
-function merge(arena, player) {
-	player.matrix.forEach((row, y) => {
-		row.forEach((value, x) => {
-			if (value) {
-				arena[y + player.position.y][x + player.position.x] = value;
-			}
-		});
-	});
-}
-
 
 document.addEventListener('keydown', event => {
 
@@ -216,34 +172,6 @@ document.addEventListener('keydown', event => {
 			break;
 	}
 });
-
-function deleteFullRows() {
-	let rowCounter = 0;
-	arena.forEach((row, index) => {
-		if(isRowFull(row)) {
-			const row = arena.splice(index, 1)[0].fill(0); //remove the row from the arena and reset the value.
-			arena.unshift(row); //put the row on top of the arena.
-			rowCounter++;
-		}
-	});
-
-	return rowCounter;
-}
-
-function isRowFull(row) {
-	
-	for(let i=0; i<row.length ; i++) {
-		if(row[i] === 0) {
-			return false;
-		}
-	}
-
-	return true;
-}
-
-function resetArena() {
-	arena.forEach(row => row.fill(0));
-}
 
 
 function updateScore() {

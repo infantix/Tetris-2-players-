@@ -4,14 +4,16 @@ class Player
         this.dropCounter = 0;
         this.dropInterval = 1; //drop every second.
         this.position = { x: 0, y: 0 };
-        this.matrix = createPiece();
+        this.matrix = [];
         this.score = 0;
+
+        this.reset(); // init position and matrix.
     }
 
     moveLeft() {
         this.position.x--;
     
-        if (collide(this, arena)) {
+        if (arena.collide(this)) {
             this.position.x++;
         }
     }
@@ -19,7 +21,7 @@ class Player
     moveRight() {
         this.position.x++;
     
-        if (collide(this, arena)) {
+        if (arena.collide(this)) {
             this.position.x--;
         }
     }
@@ -35,15 +37,15 @@ class Player
     drop() {
         this.position.y++;
 
-        if (collide(this, arena)) {
+        if (arena.collide(this)) {
             this.position.y--;
-            merge(arena, this);
-            let deletedRows = deleteFullRows();
+            arena.merge(this);
+            let deletedRows = arena.deleteFullRows();
             this.increaseScore(deletedRows);
             this.reset();
         
-            if (collide(this, arena)) { //game over
-                resetArena();
+            if (arena.collide(this)) { //game over
+                arena.resetArena();
                 this.score = 0;
             }
         }
@@ -65,7 +67,7 @@ class Player
     reset() {
         this.matrix = createPiece();
         this.position.y = 0;
-        this.position.x = (arena[0].length / 2 | 0) - (this.matrix.length / 2 | 0);
+        this.position.x = (arena.matrix[0].length / 2 | 0) - (this.matrix.length / 2 | 0);
     }
 
     increaseScore(num) {
@@ -79,7 +81,7 @@ let rotate = function (player, rotateMatrix, rotationRollback) {
     let playerPosition = player.position.x;
     rotateMatrix(player.matrix);
 
-    if (collide(player, arena)) {
+    if (arena.collide(player)) {
         player.position.x = playerPosition;
         rotationRollback(player.matrix);
     }

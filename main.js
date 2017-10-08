@@ -17,6 +17,17 @@ document.addEventListener('keydown', event => {
 		case 40: //down
 			player.drop();
 			break;
+
+		case 38: //up
+		case 83: //s
+			if(event.repeat) return;
+			player.rotateClockWise();
+			break;
+
+		case 65: //a
+			if(event.repeat) return;
+			player.rotateAntiClockWise();
+			break;
 	}
 });
 
@@ -24,14 +35,7 @@ document.addEventListener('keyup', event => {
 	const player = tetris.player;
 	
 	switch (event.keyCode) {
-		case 38: //up
-		case 83: //s
-			player.rotateClockWise();
-			break;
 
-		case 65: //a
-			player.rotateAntiClockWise();
-			break;
 	}
 });
 

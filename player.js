@@ -9,6 +9,7 @@ class Player
         this.position = { x: 0, y: 0 };
         this.matrix = [];
         this.score = 0;
+        this.level = 1;
 
         this.reset(); // init position and matrix.
     }
@@ -45,11 +46,14 @@ class Player
             this.arena.merge(this);
             let deletedRows = this.arena.deleteFullRows();
             this.increaseScore(deletedRows);
+            this.increaseSpeed();
             this.reset();
         
             if (this.arena.collide(this)) { //game over
                 this.arena.resetArena();
                 this.score = 0;
+                this.level = 1;
+                this.dropInterval = 1;
             }
         }
     }
@@ -74,7 +78,34 @@ class Player
     }
 
     increaseScore(num) {
-        this.score += num * 10;
+        let increase = 0;
+
+        if(num == 0) {
+            return;
+        }
+
+        if(num >= 4) {
+            increase = num * 40;
+        }
+        else if(num >= 3) {
+            increase = num * 30;
+        }
+        else if(num >= 2) {
+            increase = num * 20;
+        }
+        else {
+            increase = 10;
+        }
+        
+        this.score += increase;
+    }
+
+
+    increaseSpeed() {
+        if(this.score >= this.level * 100) { //increase speed every 100 points.
+            this.dropInterval -= (this.dropInterval/4);
+            this.level++;
+        }
     }
 }
 

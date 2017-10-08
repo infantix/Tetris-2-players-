@@ -41,6 +41,7 @@ document.addEventListener('keyup', event => {
 
 
 function updateScore() {
-	document.getElementById('score').innerText = tetris.player.score;
+	let text = 'Level:' + tetris.player.level + ' Score:' + tetris.player.score;
+	document.getElementById('score').innerText = text;
 }
 

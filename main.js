@@ -31,15 +31,6 @@ document.addEventListener('keydown', event => {
 	}
 });
 
-document.addEventListener('keyup', event => {
-	const player = tetris.player;
-	
-	switch (event.keyCode) {
-
-	}
-});
-
-
 function updateScore() {
 	let text = 'Level:' + tetris.player.level + ' Score:' + tetris.player.score;
 	document.getElementById('score').innerText = text;

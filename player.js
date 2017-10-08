@@ -1,6 +1,9 @@
 class Player
 {
-    constructor() {
+    constructor(arena) {
+        this.arena = arena;
+        this.pieceFactory = new PieceFactory();
+
         this.dropCounter = 0;
         this.dropInterval = 1; //drop every second.
         this.position = { x: 0, y: 0 };
@@ -13,7 +16,7 @@ class Player
     moveLeft() {
         this.position.x--;
     
-        if (arena.collide(this)) {
+        if (this.arena.collide(this)) {
             this.position.x++;
         }
     }
@@ -21,7 +24,7 @@ class Player
     moveRight() {
         this.position.x++;
     
-        if (arena.collide(this)) {
+        if (this.arena.collide(this)) {
             this.position.x--;
         }
     }
@@ -31,21 +34,21 @@ class Player
     }
 
     rotateAntiClockWise() {
-        rotate(this, rotateAntiClockWise, rotateAntiClockWise);
+        rotate(this, rotateAntiClockWise, rotateClockWise);
     }
 
     drop() {
         this.position.y++;
 
-        if (arena.collide(this)) {
+        if (this.arena.collide(this)) {
             this.position.y--;
-            arena.merge(this);
-            let deletedRows = arena.deleteFullRows();
+            this.arena.merge(this);
+            let deletedRows = this.arena.deleteFullRows();
             this.increaseScore(deletedRows);
             this.reset();
         
-            if (arena.collide(this)) { //game over
-                arena.resetArena();
+            if (this.arena.collide(this)) { //game over
+                this.arena.resetArena();
                 this.score = 0;
             }
         }
@@ -59,15 +62,15 @@ class Player
             this.drop();
             this.dropCounter = 0;
         }
-        resetCanvas();
-        draw();
+        tetris.resetCanvas();
+        tetris.draw();
         updateScore();
     }
 
     reset() {
-        this.matrix = createPiece();
+        this.matrix = this.pieceFactory.createPiece();
         this.position.y = 0;
-        this.position.x = (arena.matrix[0].length / 2 | 0) - (this.matrix.length / 2 | 0);
+        this.position.x = (this.arena.matrix[0].length / 2 | 0) - (this.matrix.length / 2 | 0);
     }
 
     increaseScore(num) {
@@ -81,7 +84,7 @@ let rotate = function (player, rotateMatrix, rotationRollback) {
     let playerPosition = player.position.x;
     rotateMatrix(player.matrix);
 
-    if (arena.collide(player)) {
+    if (player.arena.collide(player)) {
         player.position.x = playerPosition;
         rotationRollback(player.matrix);
     }

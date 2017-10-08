@@ -5,16 +5,6 @@ document.addEventListener('keydown', event => {
 	const player = tetris.player;
 	
 	switch (event.keyCode) {
-
-		case 38: //up
-		case 83: //s
-			player.rotateClockWise();
-			break;
-
-		case 65: //a
-			player.rotateAntiClockWise();
-			break;
-
 		case 37: //left
 			player.moveLeft();
 			break;
@@ -26,6 +16,21 @@ document.addEventListener('keydown', event => {
 		case 32: //space bar
 		case 40: //down
 			player.drop();
+			break;
+	}
+});
+
+document.addEventListener('keyup', event => {
+	const player = tetris.player;
+	
+	switch (event.keyCode) {
+		case 38: //up
+		case 83: //s
+			player.rotateClockWise();
+			break;
+
+		case 65: //a
+			player.rotateAntiClockWise();
 			break;
 	}
 });

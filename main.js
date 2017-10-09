@@ -31,7 +31,7 @@ document.addEventListener('keydown', event => {
 	}
 });
 
-function updateScore() {
+function refreshScore() {
 	let text = 'Level:' + tetris.player.level + ' Score:' + tetris.player.score;
 	document.getElementById('score').innerText = text;
 }

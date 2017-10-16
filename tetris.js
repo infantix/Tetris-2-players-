@@ -18,7 +18,7 @@ class Tetris
                 accumulator += (millis - lastTime) / 1000;
         
                 while(accumulator > step) {
-                    this.player.update(step);
+                    update(this, step);
                     accumulator -= step;
                 }
             }
@@ -36,7 +36,7 @@ class Tetris
 
     resetCanvas() {
         this.context.fillStyle = '#000'; //background black
-        this.context.fillRect(0, 0, canvas.width, canvas.height);
+        this.context.fillRect(0, 0, this.canvas.width, this.canvas.height);
     }
 }
 
@@ -50,6 +50,13 @@ const colors = [
     'orange',
     'purple',
 ];
+
+let update = function (tetris, step) {
+    tetris.player.update(step);
+    tetris.resetCanvas();
+    tetris.draw();
+    refreshScore();
+}
 
 let drawMatrix = function (matrix, offset, context) {
 	matrix.forEach((row, y) => {

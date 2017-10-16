@@ -5,11 +5,16 @@
 		<title>Tetris</title>
 		<style>
 			body {
+				display: flex;
 				background: #202028;
 				color: #fff;
 				font-family: sans-serif;
 				font-size: 2em;
 				text-align: center;
+			}
+
+			.player {
+				flex: 1 1 auto;
 			}
 
 			canvas {
@@ -19,8 +24,16 @@
 		</style>
 	</head>
 	<body>
-		<div id="score"></div>
-		<canvas id="tetris" width="240" height="400"></canvas>
+		<div class="player">
+			<div class="score"></div>
+			<canvas class="tetris" width="240" height="400"></canvas>
+		</div>
+
+		<div class="player">
+			<div class="score"></div>
+			<canvas class="tetris" width="240" height="400"></canvas>
+		</div>
+	
 		<script src="pieceFactory.js" ></script>
 		<script src="arena.js" ></script>
 		<script src="player.js" ></script>

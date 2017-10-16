@@ -67,9 +67,6 @@ class Player
             this.drop();
             this.dropCounter = 0;
         }
-        tetris.resetCanvas();
-        tetris.draw();
-        refreshScore();
     }
 
     reset() {

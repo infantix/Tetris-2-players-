@@ -1,9 +1,10 @@
 class Tetris
 {
-    constructor(canvas)
+    constructor(element)
     {
-        this.canvas = canvas;
-        this.context = canvas.getContext('2d');
+        this.element = element;
+        this.canvas = element.querySelector('canvas');
+        this.context = this.canvas.getContext('2d');
         this.context.scale(20, 20);
 
         this.arena = new Arena(20, 12);
@@ -15,6 +16,7 @@ class Tetris
         
         const mainLoop = (millis) => {
             if(lastTime) {
+                this.draw();
                 accumulator += (millis - lastTime) / 1000;
         
                 while(accumulator > step) {
@@ -30,13 +32,11 @@ class Tetris
     }
 
     draw() {
+        resetCanvas(this);
+        refreshScore(this);
+
         drawMatrix(this.arena.matrix, { x: 0, y: 0 }, this.context);
         drawMatrix(this.player.matrix, this.player.position, this.context);
-    }
-
-    resetCanvas() {
-        this.context.fillStyle = '#000'; //background black
-        this.context.fillRect(0, 0, this.canvas.width, this.canvas.height);
     }
 }
 
@@ -53,9 +53,6 @@ const colors = [
 
 let update = function (tetris, step) {
     tetris.player.update(step);
-    tetris.resetCanvas();
-    tetris.draw();
-    refreshScore();
 }
 
 let drawMatrix = function (matrix, offset, context) {
@@ -67,5 +64,16 @@ let drawMatrix = function (matrix, offset, context) {
 			}
 		});
 	});
+}
+
+let resetCanvas = function (tetris) {
+    tetris.context.fillStyle = '#000'; //background black
+    tetris.context.fillRect(0, 0, tetris.canvas.width, tetris.canvas.height);
+}
+
+let refreshScore = function (tetris) {
+    let text = 'Level:' + tetris.player.level + ' Score:' + tetris.player.score;
+    const score = tetris.element.querySelector('.score');
+	score.innerText = text;
 }
 

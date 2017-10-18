@@ -2,11 +2,9 @@
 const players = document.querySelectorAll('.player');
 const games = [];
 
-[...players].forEach(player => {
-	const canvas = player.querySelector('canvas');
-	const tetris = new Tetris(canvas);
+[...players].forEach(element => {
+	const tetris = new Tetris(element);
 	games.push(tetris);
-	//const score = player.querySelector('score');
 });
 
 var keys=[];
@@ -68,9 +66,6 @@ let keyPressed = function(event) {
 
 setInterval(keyPressed, 80);
 
-function refreshScore() {
-	//let text = 'Level:' + tetris.player.level + ' Score:' + tetris.player.score;
-	//document.getElementById('score').innerText = text;
-}
+
 
 

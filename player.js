@@ -47,7 +47,6 @@ class Player
             let deletedRows = this.arena.deleteFullRows();
             this.increaseScore(deletedRows);
             this.increaseSpeed();
-            refreshScore();
             this.reset();
         
             if (this.arena.collide(this)) { //game over
